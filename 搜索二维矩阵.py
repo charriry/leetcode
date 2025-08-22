@@ -3,34 +3,38 @@ class Solution:
         #matrix_T = matrix.T
         #row = 0
         def findinarr(arr,target):
-            mid = len(arr) // 2
-            if mid == 0:
-                return arr[0] == target
-            if arr[mid] == target:
-                return True
-            elif arr[mid] > target:
-                return findinarr(arr[:mid], target)
-            else:
-                return findinarr(arr[mid+1:], target) 
+            #二分查找目标
+            left = 0
+            right = len(arr)-1
+            while left <= right:
+                mid = (left + right) // 2
+                if arr[mid] == target:
+                    return True
+                elif arr[mid] > target:
+                    right = mid - 1
+                else:
+                    left = mid + 1
+            return False
+
 
         def binary_search(left,right,target):
-            if len(martix) == 1:
-                return findinarr(martix[0],target)
-            if not martix:
+            if right-left == 1:
+                return findinarr(matrix[left],target)
+            if right - left == 0:
                 return False
-            mid = len(martix) // 2
-            if target < martix[mid][0]:
-                return binary_search(martix[:mid], target)
-            elif target > martix[mid][-1]:
-                return binary_search(martix[mid+1:], target)
+            mid = (right + left) // 2
+            if target < matrix[mid][0]:
+                return binary_search(left, mid, target)
+            elif target > matrix[mid][-1]:
+                return binary_search(mid+1,right, target)
             else:
-                return findinarr(martix[mid], target)
-        return binary_search(matrix, target)
+                return findinarr(matrix[mid], target)
+        return binary_search(0,len(matrix), target)
 
 
         
             
-matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]]
-target = 5
+matrix = [[1],[3]]
+target = 4
 a = Solution()
 print(a.searchMatrix(matrix,target))
