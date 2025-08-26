@@ -74,13 +74,44 @@ class Solution:
                     m += 1
                 k+=1
         return 3
-                
+    
+    def coinChange(self,coins:list[int],amount:int)->int:
+        """
+        返回所需最少得硬币数量
+        """
+        if amount<= 0:
+            return 0
+        dp = [float("inf")]*(amount+1)
+        for coin in coins:
+            dp[coin] = 1
+
+        return dp[amount] if dp[amount]!=float("inf") else -1
+    
+    #单词拆分
+    def wordBreak(self,s:str,wordDict:list[str])->bool:
+        n = len(s)
+        m = len(wordDict)
+        if len(s) == 0:
+            return True
         
-        
+        def dfs(i):
+            """
+            定义为到第i个字符串仍可以被表示
+            """
+            if i == 0:
+                return 
+            if dfs(i-1):
+                return True
+            
+        return dfs(m)
+
 
 
     
 if __name__ == "__main__":
     a = Solution()
-    n = 5156
-    print(a.numSquares(n))
+    s = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaababaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    wordDict = ["aa","aaa","aaaa","aaaaa","aaaaaa","aaaaaaa","aaaaaaaa","aaaaaaaaa","aaaaaaaaaa","ba"]
+    print(a.wordBreak(s,wordDict))
+    #print(s)
+    #print(a.coinChange(coins=coin,amount=100))

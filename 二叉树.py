@@ -189,6 +189,103 @@ class Solution:
             root.right = dfs(left_pre+num_left+1,right_pre,inorder_root,inorder_right)
             return root
         return dfs(0,n-1,0,n-1)
+    def pathSum(self,root:TreeNode,target):
+        """
+        维护n个值，分别表示以每个节点为起点的路径对应的和
+        """
+        self.ans = 0
+        stack = [] #第i个元素表示第i个节点为起点，到目前访问的节点的路径和
+        def dfs(node):
+            nonlocal stack
+            if not node:
+                return []
+            #stack.append(node.val)
+            left = dfs(node.left)
+            right = dfs(node.right)
+            for i in range(len(left)):
+                left[i] += node.val
+                if left[i] == target:
+                    self.ans += 1
+            for i in range(len(right)):
+                right[i] += node.val
+                if right[i] == target:
+                    self.ans += 1
+            return left + right + [node.val]
+        dfs(root)
+        return self.ans
+    #一个节点的最近公共祖先
+    def lowerCommonAncestor(self,root:TreeNode,p:TreeNode,q:TreeNode)->TreeNode:
+        node = root
+        result = []
+        #找到p和q的发现路径
+
+        #使用循环找出根节点到目标节点的路径
+
+        def find_path(root,p,q):
+            find_p = False
+            stack = [(root,[root])]
+            while stack:
+                node, path = stack.pop()
+                if node is p:
+                    if find_p:
+                        result.append(path)
+                        return result
+                    find_p = True
+                    p = q
+                    result.append(path)
+                    continue
+                if node.right:
+                    stack.append((node.right,path+[node.right]))
+                if node.left:
+                    stack.append((node.left,path+[node.left]))
+        result = find_path(root,p,q)
+        #path_q = find_path(root,q)
+            
+
+        # def find_path(node,p,path):
+        #     if not node:
+        #         return 
+        #     path.append(node)
+        #     if node is p:
+        #         result.append(path[:])
+        #     temp = []
+        #     if node.left:
+        #         temp.append(node.left)
+        #     if node.right:
+        #         temp.append(node.right)
+        #     for n in temp:
+        #         find_path(n,p,path)
+        #         path.pop()
+
+        # path_p = find_path(root,p)
+        # find_path(root,q,path_q)
+        i = 0
+        n,m = len(result[0]),len(result[1])
+        while i < min(n,m):
+            if result[0][i] != result[1][i]:
+                return result[0][i-1]
+            i += 1
+        return result[0][i-1]
+            
+
+    #二叉树的最大路径和
+    def maxpathSum(self,root:TreeNode)->int:
+        self.ans = -1001
+        def dfs(node):
+            """
+            返回使用这个节点的最大路径和
+            """
+            if not node:
+                return 0
+            left= dfs(node.left)
+            right= dfs(node.right)
+
+            #判断是否是最大路径
+            self.ans = max(left,right,left+node.val,left+node.val+right,right+node.val,self.ans)
+            return max(node.val,left+node.val,right+node.val)
+        dfs(root)
+        return self.ans
+
 
 
 #将二叉树转为数组
@@ -207,11 +304,18 @@ def tree_list_to_array(head):
                 continue
             #result.append(None)
     return result
+
+
  
 if __name__ == "__main__":
-    preorde = [3,9,20,15,7]
-    inorde = [9,3,15,20,7]
+    root = TreeNode(-10)
+    root.left = TreeNode(9)
+    root.right = TreeNode(20)
+    root.right.left = TreeNode(15)
+    #root.left.left.left = TreeNode(3)
+    #root.left.left.right = TreeNode(-2)
+    #root.left.right = TreeNode(2)
+    #root.left.right.right = TreeNode(1)
+    root.right.right = TreeNode(7)
     a = Solution()
-    # root.right.left.right = TreeNode(5)
-    # root.right.left.left.left = TreeNode(6)
-    print(a.buildTree(preorde,inorde))
+    print(a.maxpathSum(root))
