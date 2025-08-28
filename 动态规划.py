@@ -89,29 +89,72 @@ class Solution:
     
     #单词拆分
     def wordBreak(self,s:str,wordDict:list[str])->bool:
+        """
+        判断s是否可以由wordDict中的单词组成
+        """
+        #判断wordDict中是否有可以由其他元素表示的单词，有的话删去
+
+        word_set = set(wordDict)
         n = len(s)
-        m = len(wordDict)
-        if len(s) == 0:
-            return True
-        
-        def dfs(i):
-            """
-            定义为到第i个字符串仍可以被表示
-            """
-            if i == 0:
-                return 
-            if dfs(i-1):
-                return True
-            
-        return dfs(m)
-
-
-
+        dp = [False]*(n+1)
+        dp[0] = True
+        for i in range(1,n+1):
+            for j in range(i):
+                if dp[j] and s[j:i] in word_set:
+                    dp[i] = True
+                    break
+        return dp[n]
     
+    #最长递增子序列长度
+    def lengthOfLTS(self,nums:list[int])->int:
+        n = len(nums)
+        max_len = 1
+        for i in range(n):
+            temp_len = 1
+            last = nums[i]
+            for j in range(i+1,n):
+                if nums[j] > last:
+                    temp_len += 1
+                    last = nums[j]
+                else:
+                    continue
+            max_len = max(max_len,temp_len)
+
+        return max_len
+    
+    #乘积最大子数组
+    def maxProduct(self,nums:list[int])->int:
+        ans = nums[0]
+        temp = nums[0]
+        i = 0
+        nega = []
+        n = len(nums)
+        while i<n:
+            if nums[i] > 0:
+                temp *= nums[i]
+                ans = max(ans,temp)
+                i += 1
+                continue
+            elif nums[i] == 0:
+                ans = max(ans,temp,0)
+                temp = 1
+                nega = []
+                i += 1
+            else:
+                if nega:
+                    temp *=nums[i]
+                    temp *=last_val
+                    ans = max(ans,temp)
+                    nega = []
+                    last_val = 1
+                else:
+                    nega.append(nums[i])
+                    last_val = temp
+                    temp = 1
+                i += 1
+        return ans
+
 if __name__ == "__main__":
     a = Solution()
-    s = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaababaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-    wordDict = ["aa","aaa","aaaa","aaaaa","aaaaaa","aaaaaaa","aaaaaaaa","aaaaaaaaa","aaaaaaaaaa","ba"]
-    print(a.wordBreak(s,wordDict))
-    #print(s)
-    #print(a.coinChange(coins=coin,amount=100))
+    nums = [-2,0,-1]
+    print(a.maxProduct(nums))

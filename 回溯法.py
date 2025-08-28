@@ -189,17 +189,48 @@ class Solution:
         dfs(0)        
         return result
 
-                
+    #N皇后
+    def solveNQueen(self,n:int)->list[list[str]]:
+        result= [["."]*n for _ in range(n)]
+        ans = []
+        def check(i,j):
+            #检查第i行第j列是否可以放置皇后
+            #检查列
+            if i==0:
+                return True
+            for k in range(i):
+                if result[k][j] == "Q":
+                    return False
+            #检查斜线
+            row = i-1
+            delta = 1
+            while row>=0:
+                if (j-delta>=0 and result[row][j-delta] == "Q") or ( j+delta<n and result[row][j+delta] == "Q"):
+                    return False
+                row -= 1
+                delta += 1
+            return True
+
+        def dfs(index):
+            """
+            表示第i个皇后可以放的位置
+            """
+            if index == n:
+                temp = [''.join(row) for row in result]
+                ans.append(temp[:])
+                return
+            for j in range(n):
+                if check(index,j):
+                    result[index][j] = "Q"
+                    dfs(index+1)
+                    result[index][j] = "."
+
+        dfs(0)
+        return ans
 
 
-
-        
 
 if __name__ == "__main__":
     a = Solution()
-    #board = [["a","a"]]
-    word = "efe"
 
-    #print(a.exist(board,word))
-
-    print(a.partition(word))
+    print(a.solveNQueen(5))
