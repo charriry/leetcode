@@ -44,7 +44,7 @@ int main() {
 
     std::istringstream iss(wordDictInput);
     std::string word;
-    while (std::getline(iss, word, ',')) {
+    while (std::getline(iss, word, ' ')) {
         wordDict.push_back(word);
     }
 

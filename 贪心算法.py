@@ -23,19 +23,54 @@ class Solution:
             longest_dis = max(longest_dis,i+nums[i])
             i +=1
         return False
-                
+    
+    #跳跃游戏2(最小步数)
+    def jump(self,nums:list[int])->int:
+        res = 0
+        n = len(nums)
+        if n<2:
+            return 0
+        i = 0
+        while i<n:
+            res += 1
+            temp_dis = i + nums[i]
+            if temp_dis>=n-1:
+                return res
+            max_dis = i
+            for j in range(i+1,temp_dis+1):
+                val = nums[j] +j
+                if nums[j] +j >=n-1:
+                    return res+1
+                if val>=max_dis:
+                    max_dis = val
+                    arise = j
+            i = arise
+        return res
+    
+    #划分字母区间
+    def partitionLabels(self,s:str)->list[int]:
+        res = []
+        dict_1 = {}
+        for i in range(len(s)):
+            dict_1[s[i]]  = dict_1.get(s[i],0)+1
+        i = 0
+        stack = {}
+        temp = 0
+        while i<len(s):
+            stack[s[i]] = stack.get(s[i],0)+1
+            if stack[s[i]] == dict_1[s[i]]:
+                del stack[s[i]]
+            if not stack:
+                res.append(i+1-temp)
+                temp = i+1
+            i += 1
+        return res
+
 
         
-        dp = [False]*n
-        dp[0] = True
-        for i in range(1,n):
-            for j in range(i):
-                if dp[j] and nums[j] >= i-j:
-                    dp[i] = True
-                    break
-        return dp[n-1]
-    
+from collections import defaultdict
 if __name__ == "__main__":
-    price = [7,1,5,3,6,4]
+    s = "caedbdedda"
     a = Solution()
-    print(a.maxProfit(price))
+    print(s[0])
+    print(a.partitionLabels(s))

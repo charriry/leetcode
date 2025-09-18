@@ -28,6 +28,9 @@ class Solution:
             heapq.heappop(result)
             ans.append(key)
         return ans
+    
+    #数据流的中位数
+import a
 
 def MAX_heap(nums:list[int],index):
     n = len(nums)

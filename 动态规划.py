@@ -124,37 +124,96 @@ class Solution:
     
     #乘积最大子数组
     def maxProduct(self,nums:list[int])->int:
-        ans = nums[0]
-        temp = nums[0]
-        i = 0
-        nega = []
         n = len(nums)
-        while i<n:
-            if nums[i] > 0:
-                temp *= nums[i]
-                ans = max(ans,temp)
-                i += 1
-                continue
-            elif nums[i] == 0:
-                ans = max(ans,temp,0)
-                temp = 1
-                nega = []
-                i += 1
-            else:
-                if nega:
-                    temp *=nums[i]
-                    temp *=last_val
-                    ans = max(ans,temp)
-                    nega = []
-                    last_val = 1
-                else:
-                    nega.append(nums[i])
-                    last_val = temp
-                    temp = 1
-                i += 1
+        max_product = nums[0]
+        min_product = nums[0]
+        ans = nums[0]
+        for i in range(1,n):
+            if nums[i] < 0:
+                max_product, min_product = min_product, max_product
+            max_product = max(nums[i], max_product * nums[i])
+            min_product = min(nums[i], min_product * nums[i])
+            ans = max(ans, max_product)
         return ans
+    
+    #分隔等和子集
+    def canPartition(self,nums:list[int])->bool:
+        n = len(nums)
+        child_set = []
+        target = sum(nums)/2
+        if n<2 or sum(nums)%2 == 1:
+            return False
+        result = False
+        def dfs(i):
+            nonlocal result
+            if i == n:
+                return 
+            for j in range(i,n):
+                child_set.append(nums[i])
+                if result:
+                    break
+                if sum(child_set) == target:
+                    result = True
+                dfs(j+1)
+                child_set.pop()
+        dfs(0)
+        return result
+    
+    def uniquePaths(self,m,n):
+        i,j = 0,0
+        result = [[1]*n] + [[1] + [0]*(n-1) for _ in range(m-1)]
+        for i in range(1,m):
+            for j in range(1,n):
+                result[i][j] = result[i-1][j] + result[i][j-1]
+        return result[m-1][n-1]
+    
+    #最长有效括号
+    def longestValidParentheses(self,s:str)->int:
+        n = len(s)
+        i=0
+        left = 0
+        longest_dis = 0
+        temp = 0
+        while i<n:
+            if left == 0 and s[i] == ")":
+                longest_dis = max(longest_dis,temp)
+                i+= 1
+                continue
+            if s[i] == "(":
+                left += 1
+                i+=1
+                continue
+            else:
+                left -= 1
+                temp+=2
+                i+=1
+                if left == 0:
+                    longest_dis = max(temp,longest_dis)
+        
+        return max(temp,longest_dis)
+    
+    #最长公共子序列
+    def longestCommonSubsequence(self, text1: str, text2: str) -> int:
+        m,n = len(text1),len(text2)
+        dp = [[0]*(m+1) for _ in range(n+1)]
+        for i in range(0,n):
+            for j in range(0,m):
+                if text1[j] == text2[i]:
+                    dp[i+1][j+1] = dp[i][j]+1
+                else:
+                    dp[i+1][j+1] = max(dp[i+1][j],dp[i][j+1])
 
+        return dp[n][m]
+
+import heapq
 if __name__ == "__main__":
-    a = Solution()
-    nums = [-2,0,-1]
-    print(a.maxProduct(nums))
+    # a = Solution()
+    # text1 = "oxcs"
+    # text2 = "shmtox"
+    # print(a.longestCommonSubsequence(text1,text2))
+    diccs = [1,2,3]
+    print("source",diccs)
+    diccs.
+    print("after",diccs)
+import heapq
+heapq.heapify   
